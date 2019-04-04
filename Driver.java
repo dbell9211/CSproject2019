@@ -5,10 +5,11 @@ import java.util.*;
 public class Driver {
    
    //instance variables
-   private CPU[] cpus;
+   private CPU[] cpu;
+   private Thread[] threads; //simulated threads
    this.dispatcher = new dispatcher();
    this.register = new register();
-   private Thread[] threads; //simulated threads
+
    
    this.threads = new threads[this.cpu.length]
    
@@ -68,10 +69,10 @@ public class Driver {
 
 		boolean allJoined;
 
-		do {
+		/*
+      do {
 			for ( int f = 0; f < this.cpu.length; f++ ) {
-				synchronized (this.cpus[f]) {
-					//this.cpu[f]; fix this part
+				synchronized (this.cpu[f]) {
 				}
 				this.threads[f].join();
 				if ( !this.threads[f].isAlive() ) { ///boolean self heck maybe be place within file.
@@ -88,7 +89,7 @@ public class Driver {
 				}
 			}
 		} while (!allJoined);   
-         
+    */     
    }
    
       }
