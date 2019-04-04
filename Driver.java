@@ -99,7 +99,7 @@ public class Driver {
    }// end main method
    
    public void dump() {
-      System.out.println("Disk size: " + disksize +  "RAM usage: " + RAM );
+      System.out.println("Disk size: " + disksize +  "RAM usage: " + RAMsize );
       
     for (CPU cpu : this.cpu) {
       System.out.println( "CPU " + cpu.getCPUID() );
