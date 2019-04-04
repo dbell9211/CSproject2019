@@ -7,6 +7,9 @@ public class Driver {
    //instance variables
    private CPU[] cpu;
    private Thread[] threads; //simulated threads
+   private Scheduler scheduler;
+   private Dispatcher_2 dispatcher;
+   private Memory disk;
    this.dispatcher = new dispatcher();
    this.register = new register();
 
@@ -15,7 +18,6 @@ public class Driver {
    
    CPU cpu = new CPU();
    
-   //call Scheduler
    scheduler = new Scheduler();
    this.Schedulerprocess = new Schedulerprocess;
    
@@ -75,7 +77,7 @@ public class Driver {
 				synchronized (this.cpu[f]) {
 				}
 				this.threads[f].join();
-				if ( !this.threads[f].isAlive() ) { ///boolean self heck maybe be place within file.
+				if ( !this.threads[f].isAlive() ) { 
 					joined[f] = true;
 				}
 			}
@@ -106,7 +108,7 @@ public class Driver {
     }  
       
       
-      //code future reference on CPUs listed down here.
+    
       
    }
 }//end driver class
