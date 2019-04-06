@@ -11,7 +11,7 @@ public class Dispatcher {
     for (CPU cpu : this.cpus) {
 			if ((cpu.getProcess() == null || PCB.Status.RUNNING != cpu.getJob().getStatus())) {
 				
-				PCB.next();
+				PCB next;
 				next = Scheduler.getReadyQueue().remove();
 				cpu.fetch(next);
 				RAM cache = cpu.getCache();
