@@ -13,7 +13,7 @@ public class Scheduler implements Runnable {
 	private Schedulerprocess schedulerprocess;
    public LinkedList<String> readyqueue = new LinkedList<String>();
    public LinkedList<String> Jobqueue = new LinkedList<String>();
-   public LinkedList<String> List = new LinkedList<String>();//temp. a string list
+   public LinkedList<String> List = new LinkedList<String>();//temp. a string list might need to change data structure for other variables as well.
 
 	public Scheduler( Disk disk, PCB pcb, Schedulerprocess schedulerprocess ) {
 
@@ -23,7 +23,7 @@ public class Scheduler implements Runnable {
 	}
 
 	@Override public void run() {
-		// Remove terminated processes from the RAM
+		// Remove terminated processes from the RAM, may need to change read or other parameters.
 		for (PCB pcb : this.pcb) {
 			if (pcb.Status == pcb.Status.BLOCKED) {
 					for ( int x = 0; x < disk.read(); x++ ) {
@@ -39,7 +39,7 @@ public class Scheduler implements Runnable {
 			if ( this.schedulerprocess == Schedulerprocess.Priority ) {
 				//Find highest priority process
 				for ( PCB.Status pcb : List ) {
-					if ( next.getPriority() < PCB.getPriority() ) { //need a look ahead for priority check.
+					if ( next.getPriority() < pcb.getPriority() ) { //need a look ahead for priority check.
 						 //psedo code here. moves to next pcb.maybe change list parameters?
 					}
 				}

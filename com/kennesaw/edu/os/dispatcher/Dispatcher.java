@@ -34,6 +34,9 @@ public class Dispatcher implements Runnable {
 					//cache.write(r, Disk.read(next, r));
 				//Driver.CPU[r].load(pcb);
             }
+            //synchronized (cpu) {
+            //pseudo code here.
+            //}
          }
    }
   }//end method

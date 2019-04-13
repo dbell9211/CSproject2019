@@ -90,7 +90,7 @@ public class Driver {
             this.dispatcher.run();
          
             boolean jobcompleted = true;
-            if(PCB.Status != PCB.Status.BLOCKED) {
+            if(!pcb.Status.BLOCKED) {
                jobcompleted = false;
             }
             
@@ -102,7 +102,7 @@ public class Driver {
          }
          
          for (CPU cpu : this.cpus) {
-			cpu.signalShutdown();
+			//cpu.signalShutdown(); -- might need for later.
 			synchronized (cpu) {
 			}
 		}
@@ -147,7 +147,7 @@ public class Driver {
    }
  
    public static void Main(String []args) {
-      //int[] cpuset = { 1, 4}
+      //int[] cpuset = { 1, 4 }
       for (Schedulerprocess policy : Schedulerprocess.values()) {
 			for ( int numCPUs : cpuset ) {
             new Driver(disksize, RAMsize, registerSize, cacheSize, numcpus, schedulerprocess);
@@ -160,7 +160,7 @@ public class Driver {
    public void dump() {
       System.out.println("Disk size: " + disk +  "RAM usage: " + RAMsize + "Number of registers: " + registers );
       for (CPU cpu : this.cpus) {
-        System.out.println( "CPU " + PCB.getcpuID() );
+        System.out.println( "CPU: " + pcb.getcpuID());
 		   //cpu.printDump();
 		   System.out.println();
       }  

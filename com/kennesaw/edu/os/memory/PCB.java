@@ -13,7 +13,7 @@ public class PCB
 
    public enum Status
    {
-      RUNNING, READY, BLOCKED, NEW
+      RUNNING, READY, BLOCKED, NEW;
    }
   
 
