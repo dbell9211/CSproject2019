@@ -25,7 +25,7 @@ public class Scheduler implements Runnable {
 	@Override public void run() {
 		// Remove terminated processes from the RAM, may need to change read or other parameters.
 		for (PCB pcb : this.pcb) {
-			if (pcb.Status == pcb.Status.BLOCKED) {
+			if (pcb.status.getStatus_NUM() == 2) {
 					for ( int x = 0; x < disk.read(); x++ ) {
 						this.disk.write(pcb.getStartingAddress());
 					}			
@@ -35,7 +35,7 @@ public class Scheduler implements Runnable {
 
 		// Find next process
 		if ( Jobqueue.size() > 0 ) {
-			pcb.Status = List.get( 0 );
+			pcb.status = List.get( 0 );
 			if ( this.schedulerprocess == Schedulerprocess.Priority ) {
 				//Find highest priority process
 				for ( PCB.Status pcb : List ) {
@@ -47,8 +47,8 @@ public class Scheduler implements Runnable {
 				// Find the next loaded process
 			   List.get( 0 );
 			}
-            readyqueue.add(pcb.Status);//pseudo coded.
-				pcb.Status = pcb.Status.READY;
+            readyqueue.add(pcb.status);//pseudo coded.
+				pcb.status = pcb.status.READY;
 			}
 		}
 }

@@ -28,7 +28,7 @@ public class Driver {
    private static Loader loader;
    private Register registers;
    private PCB pcb;
-   private String Status;
+   ///private String Status;
    
    //final static int NUM_CPUS = 1;
    public static int[] cpuset = { 1, 4 };
@@ -56,7 +56,7 @@ public class Driver {
       this.schedulerprocess = schedulerprocess;
       
       
-      this.dispatcher = new Dispatcher(cpus, pcb, Status, disk);
+      this.dispatcher = new Dispatcher(cpus, pcb, disk);
       this.registers = new Register();
       this.scheduler = new Scheduler(disk, pcb, schedulerprocess);
       //this.schedulerprocess = new Schedulerprocess(); may not need considering Schedulerprocess class is an enum.
@@ -90,7 +90,7 @@ public class Driver {
             this.dispatcher.run();
          
             boolean jobcompleted = true;
-            if(!pcb.Status.BLOCKED) {
+            if(pcb.status.getStatus_NUM() != 2) {
                jobcompleted = false;
             }
             

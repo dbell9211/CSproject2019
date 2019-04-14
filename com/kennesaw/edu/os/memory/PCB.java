@@ -4,18 +4,30 @@ import java.io.*;
 public class PCB
 {
    int cpuID;
-   public String Status;
+   //private String Status;
    int counter;
    int priority;
    int startingAddress;
    char PC;
+   public Status status;
+  
   
 
    public enum Status
    {
-      RUNNING, READY, BLOCKED, NEW;
+      RUNNING(0), READY(1), BLOCKED(2), NEW(3);
+      
+      public int Status_TYPE;
+      Status(int Status_NUM) {
+         Status_TYPE = Status_NUM;
+      }
+      
+      public int getStatus_NUM() {
+         return Status_TYPE;
+      }
    }
-  
+   
+    
 
    //Setters and getters
    public void setPC(char PC)
@@ -57,10 +69,10 @@ public class PCB
    }
 
 
-   public PCB(int cpuID, String State, int counter, int priority, int startingAddress )
+   public PCB(int cpuID, Status status, int counter, int priority, int startingAddress )
    {
       this.cpuID = cpuID;
-      this.Status = Status;
+      this.status = status;
       this.counter = counter;
       this.priority = priority;
       this.startingAddress = startingAddress;
