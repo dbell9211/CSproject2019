@@ -15,7 +15,7 @@ public class PCB
 
    public enum Status
    {
-      RUNNING(0), READY(1), BLOCKED(2), NEW(3);
+      RUNNING(0), READY(1), BLOCKED(2), NEW(3), TERMINATED(4);
       
       public int Status_TYPE;
       Status(int Status_NUM) {
