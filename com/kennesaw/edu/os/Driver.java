@@ -7,6 +7,7 @@ import com.kennesaw.edu.os.memory.Disk;
 import com.kennesaw.edu.os.memory.Loader;
 import com.kennesaw.edu.os.memory.Memory;
 import com.kennesaw.edu.os.memory.PCB;
+import com.kennesaw.edu.os.memory.PCB.Status;
 import com.kennesaw.edu.os.scheduler.Scheduler;
 import com.kennesaw.edu.os.scheduler.Schedulerprocess;
 
@@ -24,10 +25,18 @@ public class Driver {
    private Scheduler scheduler;
    private Dispatcher dispatcher;
    private Disk disk;
+   private Memory memory;
    private static Schedulerprocess schedulerprocess = Schedulerprocess.FirstInFirstOut;
    private static Loader loader;
    private Register registers;
    private PCB pcb;
+   public static LinkedList<PCB> pcblist = new LinkedList<PCB>();
+   public int cpuID;
+   public Status status;
+   public int counter;
+   public int priority;
+   public int startingAddress;
+   
    ///private String Status;
    
    //final static int NUM_CPUS = 1;
@@ -45,7 +54,9 @@ public class Driver {
    private static int disksize = 2048;
    private static int numcpus = 1;
    
-   public Driver( int disksize, int RAMsize, int registerSize, int cacheSize, int numcpus, Schedulerprocess schedulerprocess) {
+   
+   public Driver( int disksize, int RAMsize, int registerSize, int cacheSize, int numcpus, 
+   Schedulerprocess schedulerprocess) {
            
       //this.disk = disk;
       this.disksize = disksize;
@@ -56,31 +67,37 @@ public class Driver {
       this.schedulerprocess = schedulerprocess;
       
       
-      this.dispatcher = new Dispatcher(cpus, pcb, disk);
+      this.dispatcher = new Dispatcher(cpus, memory);
       this.registers = new Register();
-      this.scheduler = new Scheduler(disk, pcb, schedulerprocess);
-      //this.schedulerprocess = new Schedulerprocess(); may not need considering Schedulerprocess class is an enum.
+      this.scheduler = new Scheduler(memory, disk, pcb, schedulerprocess);
       this.loader = new Loader();
+      this.pcb = new PCB(cpuID, status, counter, priority, startingAddress);
       
       //loadingfile( new file getLoader().getResource( "Program File.txt"))
       //start run file here.
       //code for an output file here.
-
+      
+      this.cpus = new CPU[numcpus];
       this.threads = new Thread[this.cpus.length];
    
       for (int x = 0; x < this.cpus.length; x++ ) {
-			CPU cpu = new CPU(x, registerSize, cacheSize);
-			this.cpus[x] = cpu;
+			CPU cpu = new CPU(x); //maybe place pcb into parameter here. 
+		   this.cpus[x] = cpu;
 			this.threads[x] = new Thread( this.cpus[x] );
          //cpu.printDump();
       }
+      
+      for(int y = 0; y < this.pcb.counter; y++) {
+         insertpcb(pcb); 
+      }
    }
+   
    
    public static void loadingfile(File programfile) {
       loader = new Loader();
    }
    
-   public void run() {//for thread array.
+   public void run() throws InterruptedException  {//for thread array.
       for(int e = 0; e < cpus.length; e++) {
          this.threads[e].start();
       }
@@ -90,8 +107,10 @@ public class Driver {
             this.dispatcher.run();
          
             boolean jobcompleted = true;
-            if(pcb.status.getStatus_NUM() != 2) {
-               jobcompleted = false;
+            for(PCB pcb: this.pcblist) {
+               if(pcb.status.getStatus_NUM() != 2) {
+                  jobcompleted = false;
+               }
             }
             
          boolean notalive = true;
@@ -104,6 +123,7 @@ public class Driver {
          for (CPU cpu : this.cpus) {
 			//cpu.signalShutdown(); -- might need for later.
 			synchronized (cpu) {
+         cpu.notify(); 
 			}
 		}
 
@@ -165,6 +185,10 @@ public class Driver {
 		   System.out.println();
       }  
    }//This method is here for the printdump, which may be placed else where, also should there be a pcb dump as well?
+   
+   public static void insertpcb(PCB pcb) {
+      pcblist.add(pcb);
+   } 
 }//end driver class
 
   

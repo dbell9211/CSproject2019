@@ -1,11 +1,11 @@
-/ Current Package
+// Current Package
 package com.kennesaw.edu.os.cpu;
 // Imports (Packages)
 import com.kennesaw.edu.os.memory.PCB;
 import com.kennesaw.edu.os.scheduler.Scheduler;
 
 // CPU Class
-public class CPU implements ICPU {
+public class CPU implements ICPU, Runnable {
 	// Global Variables 
 	public int reg1, reg2, sReg1, sReg2, dReg, bReg; // Registers
 	public int addr; // Current address

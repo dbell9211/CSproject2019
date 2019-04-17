@@ -3,12 +3,12 @@ package com.kennesaw.edu.os.memory;
 import java.io.*; 
 public class PCB
 {
-   int cpuID;
+   public int cpuID;
    //private String Status;
-   int counter;
-   int priority;
-   int startingAddress;
-   char PC;
+   public int counter;
+   public int priority;
+   public int startingAddress;
+   public char PC;
    public Status status;
   
   
