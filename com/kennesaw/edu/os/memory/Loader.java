@@ -22,10 +22,15 @@ public class Loader
     final int DATA_OUTPUT_BUFFER = 3;
     final int DATA_TEMP_BUFFER = 4;
     
-    public static void Loader(String inputFile) throws FileNotFoundException 
+    public Loader(String inputFile)  
     {
+        try 
+        {
         File file = new File(inputFile);
-        Scanner scan = new Scanner(file);
+        Scanner scan = new Scanner("Compiletest.txt");
+        } catch(Exception e) {
+            System.out.print(e);
+        }
     }
     
     public void Run() throws IOException

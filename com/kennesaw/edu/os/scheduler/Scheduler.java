@@ -19,7 +19,7 @@ public class Scheduler implements Runnable {
    public LinkedList<PCB> pcblist = new LinkedList<PCB>();//temp. a string list might need to change data structure for other variables as well.
    public String Address = " ";
    public String Address2 = " ";
-   int i;
+   int holder;
    
 
 	public Scheduler( Memory memory, Disk disk, PCB pcb, Schedulerprocess schedulerprocess ) {
@@ -35,8 +35,7 @@ public class Scheduler implements Runnable {
 		for (PCB pcb : this.pcblist) {
 			if (pcb.status.getStatus_NUM() == 4) {
 					for ( int x = 0; x < pcblist.size(); x++ ) {
-						this.disk.write(pcb.getStartingAddress(), pcb.getStartingAddress() + Address);//may need to change and add a terminate process to memory
-					   //psuedo code here
+						this.disk.write(pcb.getStartingAddress(), pcb.getStartingAddress() + Address);
                }			
          }
 		}
@@ -44,24 +43,24 @@ public class Scheduler implements Runnable {
 
 		// Find next process
 		if ( pcblist.size() > 0 ) {
-			pcblist.(i) = Jobqueue.get( 0 );//need to change parameters here and also add a loop.
-         i++;
+			for(int i = 0; i < pcblist.size(); i++) {
+            Jobqueue.add(pcb);
+         }
 			if ( this.schedulerprocess == Schedulerprocess.Priority ) {
 				//Find highest priority process
 				for ( PCB pcb : pcblist ) {
 					if ( pcb.getPriority() < pcblist.size()) { //need a look ahead for priority check.
-						 //something something = pcb;
+						 //return pcb item in list. Will check will bug squashing.
 					}
 				}
 			} else if ( this.schedulerprocess == Schedulerprocess.FirstInFirstOut ) {
-				// Find the next loaded process
 			   for(int z = 0; z < pcblist.size(); z++) {
                pcblist.get(z);
             }
 			}
          int size = pcblist.size();
-         for(int q; q < size; q++) {
-            this.memory.write(q, this.disk.read(pcb.getStartingAddress(), pcb.getStartingAddress() + Address2 ));//change string parameter here.
+         for(int q = 0; q < size; q++) {
+            this.memory.writeMemory(q, pcb.getStartingAddress() + Address2);//change string parameter here.
          }
             readyqueue.add(pcb);//pseudo coded.
 				pcb.status = pcb.status.READY;

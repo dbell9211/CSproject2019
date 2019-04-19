@@ -11,7 +11,6 @@ import com.kennesaw.edu.os.memory.PCB.Status;
 import com.kennesaw.edu.os.scheduler.Scheduler;
 import com.kennesaw.edu.os.scheduler.Schedulerprocess;
 
-
 import java.io.*;
 import java.util.*;
 import java.nio.*;
@@ -36,6 +35,7 @@ public class Driver {
    public int counter;
    public int priority;
    public int startingAddress;
+   public String inputFile;
    
    ///private String Status;
    
@@ -53,6 +53,7 @@ public class Driver {
    private static int registerSize = 16;
    private static int disksize = 2048;
    private static int numcpus = 1;
+   private static Schedulerprocess policy = Schedulerprocess.FirstInFirstOut;
    
    
    public Driver( int disksize, int RAMsize, int registerSize, int cacheSize, int numcpus, 
@@ -70,7 +71,7 @@ public class Driver {
       this.dispatcher = new Dispatcher(cpus, memory);
       this.registers = new Register();
       this.scheduler = new Scheduler(memory, disk, pcb, schedulerprocess);
-      this.loader = new Loader();
+      this.loader = new Loader("CompileTest.txt");
       this.pcb = new PCB(cpuID, status, counter, priority, startingAddress);
       
       //loadingfile( new file getLoader().getResource( "Program File.txt"))
@@ -87,14 +88,14 @@ public class Driver {
          //cpu.printDump();
       }
       
-      for(int y = 0; y < this.pcb.counter; y++) {
+      for(int y = 0; y < this.pcb.getPC(); y++) {
          insertpcb(pcb); 
       }
    }
    
    
-   public static void loadingfile(File programfile) {
-      loader = new Loader();
+   public void loadingfile(String inputfile) {
+      loader = new Loader(inputFile);
    }
    
    public void run() throws InterruptedException  {//for thread array.
@@ -108,7 +109,7 @@ public class Driver {
          
             boolean jobcompleted = true;
             for(PCB pcb: this.pcblist) {
-               if(pcb.status.getStatus_NUM() != 2) {
+               if(pcb.status.getStatus_NUM() != 4) {
                   jobcompleted = false;
                }
             }
@@ -166,9 +167,9 @@ public class Driver {
       loader = null;
    }
  
-   public static void Main(String []args) {
+   public static void main(String []args) {
       //int[] cpuset = { 1, 4 }
-      for (Schedulerprocess policy : Schedulerprocess.values()) {
+      for (Schedulerprocess schedulerprocess : Schedulerprocess.values()) {//redo this for loop. 
 			for ( int numCPUs : cpuset ) {
             new Driver(disksize, RAMsize, registerSize, cacheSize, numcpus, schedulerprocess);
 				//CPU.reset(); May need a cpu reset method maybe to reset cpuid.
@@ -180,7 +181,7 @@ public class Driver {
    public void dump() {
       System.out.println("Disk size: " + disk +  "RAM usage: " + RAMsize + "Number of registers: " + registers );
       for (CPU cpu : this.cpus) {
-        System.out.println( "CPU: " + pcb.getcpuID());
+        System.out.println( "CPU: " + pcb.getProcessID());
 		   //cpu.printDump();
 		   System.out.println();
       }  
