@@ -5,7 +5,7 @@ public class PCB
 {
    int ProcessID;
    //String Status;
-   int counter;
+   int instructionLength;
    int priority;
    int startingAddress;
    char PC;
@@ -67,7 +67,7 @@ public class PCB
           //When it is terminated
           else
           {
-           System.out.println("Terminated");
+           System.out.println("Process " + ProcessID + "Terminated");
            System.out.println("Total Running Time : " + totalRunningTime);
            System.out.println("Total Waiting Time : " + totalWaitingTime);
           }
@@ -110,14 +110,29 @@ public class PCB
    {
      return this.startingAddress;
    }
+   
+   public int getInstructionLength()
+   {
+   return this.instructionLength;
+   }
+   
+   public long getWaitingTime()
+   {
+   return this.totalWaitingTime;
+   }
+   
+   public long getRunningTime()
+   {
+   return this.totalRunningTime;
+   }
 
 
-   public PCB(int ProcessID, Status status, int counter, int priority, int startingAddress )
+   public PCB(int ProcessID, Status status, int instructionLength, int priority, int startingAddress )
    {
       this.ProcessID = ProcessID;
       this.status = status;
-      this.counter = counter;
       this.priority = priority;
+      this.instructionLength = instructionLength;
       this.startingAddress = startingAddress;
 
    }

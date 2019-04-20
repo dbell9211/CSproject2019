@@ -2,7 +2,7 @@ package com.kennesaw.edu.os.memory;
 
 public class Disk
 {
-	private static String[] Disk = new String[1024]; // String array for Disk
+	private static String[] Disk = new String[2048]; // String array for Disk
 	
 
 	// Read Disk

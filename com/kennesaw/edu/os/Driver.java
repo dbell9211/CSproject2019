@@ -25,11 +25,11 @@ public class Driver {
    private Dispatcher dispatcher;
    private Disk disk;
    private Memory memory;
-   private static Schedulerprocess schedulerprocess = Schedulerprocess.FirstInFirstOut;
    private static Loader loader;
    private Register registers;
    private PCB pcb;
-   public static LinkedList<PCB> pcblist = new LinkedList<PCB>();
+   public static LinkedList<PCB> pcblist;
+   public static LinkedList<CPU> cpuStatusList;
    public int cpuID;
    public Status status;
    public int counter;
@@ -40,7 +40,8 @@ public class Driver {
    ///private String Status;
    
    //final static int NUM_CPUS = 1;
-   public static int[] cpuset = { 1, 4 };
+   public static int cpuset = 1;
+   // public static int[] cpuset = { 1, 4 };
 
    
    //final static int D_SIZE = 2048;
@@ -53,13 +54,14 @@ public class Driver {
    private static int registerSize = 16;
    private static int disksize = 2048;
    private static int numcpus = 1;
-   private static Schedulerprocess policy = Schedulerprocess.FirstInFirstOut;
+   private static Schedulerprocess schedulerprocess = Schedulerprocess.FirstInFirstOut;
    
    
    public Driver( int disksize, int RAMsize, int registerSize, int cacheSize, int numcpus, 
    Schedulerprocess schedulerprocess) {
            
       //this.disk = disk;
+      this.pcblist = new LinkedList <PCB>();
       this.disksize = disksize;
       this.RAMsize = RAMsize;
       this.registerSize = registerSize; 
@@ -68,10 +70,10 @@ public class Driver {
       this.schedulerprocess = schedulerprocess;
       
       
-      this.dispatcher = new Dispatcher(cpus, memory);
+      
       this.registers = new Register();
-      this.scheduler = new Scheduler(memory, disk, pcb, schedulerprocess);
-      this.loader = new Loader("CompileTest.txt");
+      
+      this.loader = new Loader("C://Users//Marc//Desktop//OS-Project2019-master//OS-Project2019-master//src//main//java//com//kennesaw//edu//os//Instructions.txt");
       this.pcb = new PCB(cpuID, status, counter, priority, startingAddress);
       
       //loadingfile( new file getLoader().getResource( "Program File.txt"))
@@ -79,11 +81,13 @@ public class Driver {
       //code for an output file here.
       
       this.cpus = new CPU[numcpus];
+     //System.out.println(this.cpus);
       this.threads = new Thread[this.cpus.length];
    
       for (int x = 0; x < this.cpus.length; x++ ) {
-			CPU cpu = new CPU(x); //maybe place pcb into parameter here. 
+			CPU cpu = new CPU(x);  
 		   this.cpus[x] = cpu;
+         cpuStatusList.add(cpu);
 			this.threads[x] = new Thread( this.cpus[x] );
          //cpu.printDump();
       }
@@ -91,12 +95,13 @@ public class Driver {
       for(int y = 0; y < this.pcb.getPC(); y++) {
          insertpcb(pcb); 
       }
+      this.dispatcher = new Dispatcher();
+      this.scheduler = new Scheduler(memory, disk, pcb, schedulerprocess, pcblist, cpuStatusList, dispatcher);
    }
-   
    
    public void loadingfile(String inputfile) {
       loader = new Loader(inputFile);
-   }
+   } 
    
    public void run() throws InterruptedException  {//for thread array.
       for(int e = 0; e < cpus.length; e++) {
@@ -105,7 +110,7 @@ public class Driver {
          boolean jobscomplete = false;
          while(!jobscomplete) {
             this.scheduler.run();
-            this.dispatcher.run();
+            //this.dispatcher.run();
          
             boolean jobcompleted = true;
             for(PCB pcb: this.pcblist) {
@@ -168,20 +173,25 @@ public class Driver {
    }
  
    public static void main(String []args) {
-      //int[] cpuset = { 1, 4 }
-      for (Schedulerprocess schedulerprocess : Schedulerprocess.values()) {//redo this for loop. 
-			for ( int numCPUs : cpuset ) {
-            new Driver(disksize, RAMsize, registerSize, cacheSize, numcpus, schedulerprocess);
-				//CPU.reset(); May need a cpu reset method maybe to reset cpuid.
-            Driver.reset();
-			}
-		}
+      Driver driver = new Driver(disksize, RAMsize, registerSize, cacheSize, numcpus, schedulerprocess);
+      // Try / Catch for loader execution
+      try {
+         loader.Run();
+      } catch (IOException e) {
+         System.out.println("Error loading file. Exception: " + e);
+      }
+      // Try / Catch for driver execution
+      try {
+         driver.run();
+      } catch (InterruptedException e) {
+         System.out.println("Driver did not run successfully. Exception : " + e);
+      }
    }// end main method
    
    public void dump() {
       System.out.println("Disk size: " + disk +  "RAM usage: " + RAMsize + "Number of registers: " + registers );
       for (CPU cpu : this.cpus) {
-        System.out.println( "CPU: " + pcb.getProcessID());
+        System.out.println( "ProcessID: " + pcb.getProcessID());
 		   //cpu.printDump();
 		   System.out.println();
       }  
@@ -191,5 +201,3 @@ public class Driver {
       pcblist.add(pcb);
    } 
 }//end driver class
-
-  
